@@ -18,8 +18,8 @@ namespace Hospisim.Models.Entities
         public string EstadoCivil { get; set; }
         public bool PossuiPlanoSaude { get; set; }
 
-        public ICollection<Prontuario> Prontuarios { get; set; }
-        public ICollection<Internacao> Internacoes { get; set; }
+        public ICollection<Prontuario>? Prontuarios { get; set; }
+        public ICollection<Internacao>? Internacoes { get; set; }
 
     }
 }
