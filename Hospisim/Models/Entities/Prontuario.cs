@@ -1,4 +1,6 @@
-﻿namespace Hospisim.Models.Entities
+﻿using HOSPISIM.Models;
+
+namespace Hospisim.Models.Entities
 {
     public class Prontuario
     {

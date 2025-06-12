@@ -16,8 +16,11 @@ namespace HOSPISIM.Models
         public Guid ProntuarioId { get; set; }
         public Prontuario Prontuario { get; set; }
 
-        public Guid ProfissionalSaudeId { get; set; }
-        public ProfissionalSaude ProfissionalSaude { get; set; }
+        public Guid ProfissionalId { get; set; }
+        public ProfissionalSaude Profissional { get; set; }
+
+        public Guid PacienteId { get; set; }
+        public Paciente Paciente { get; set; }
 
         public ICollection<Prescricao> Prescricoes { get; set; }
         public ICollection<Exame> Exames { get; set; }
