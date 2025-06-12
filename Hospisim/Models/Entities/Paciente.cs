@@ -1,12 +1,10 @@
-﻿namespace Hospisim.Models.Entities
+﻿using HOSPISIM.Models;
+
+namespace Hospisim.Models.Entities
 {
     public class Paciente
     {
-        public Paciente()
-        {
-            Prontuarios = new HashSet<Prontuario>();
-            Internacoes = new HashSet<Internacao>();
-        }
+
         public Guid Id { get; set; }
         public string NomeCompleto { get; set; }
         public string CPF { get; set; }
@@ -22,5 +20,6 @@
 
         public ICollection<Prontuario> Prontuarios { get; set; }
         public ICollection<Internacao> Internacoes { get; set; }
+
     }
 }
