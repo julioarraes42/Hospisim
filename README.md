@@ -156,5 +156,5 @@ classDiagram
 
 ## 📌 Autor
 
-**Seu Nome Aqui**  
-[Seu email ou LinkedIn]# Hospisim
+**Julio Cesar**  
+[(https://github.com/julioarraes42)]# Hospisim
