@@ -1,6 +1,7 @@
 ﻿using Hospisim.Models.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HOSPISIM.Models
 {
@@ -14,8 +15,8 @@ namespace HOSPISIM.Models
         public string RegistroConselho { get; set; }
         public string TipoRegistro { get; set; }
 
-        public Guid EspecialidadeId { get; set; }
-        public Especialidade Especialidade { get; set; }
+        [ForeignKey("Especialidade")]
+        public Guid? EspecialidadeId { get; set; }
 
         public DateTime DataAdmissao { get; set; }
         public int CargaHorariaSemanal { get; set; }
@@ -23,6 +24,7 @@ namespace HOSPISIM.Models
         public bool Ativo { get; set; }
 
         public ICollection<Atendimento> Atendimentos { get; set; }
-        public ICollection<Prescricao> Prescricoes { get; set; }
+
+
     }
 }

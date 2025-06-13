@@ -17,7 +17,7 @@ namespace Hospisim.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -63,16 +63,16 @@ namespace Hospisim.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProfissionalId")
+                    b.Property<Guid?>("ProfissionalId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ProfissionalSaudeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProntuarioId")
+                    b.Property<Guid?>("ProntuarioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -84,10 +84,6 @@ namespace Hospisim.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PacienteId");
-
-                    b.HasIndex("ProfissionalId");
 
                     b.HasIndex("ProfissionalSaudeId");
 
@@ -175,9 +171,6 @@ namespace Hospisim.Migrations
                     b.Property<Guid>("ProfissionalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProfissionalSaudeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ReacoesAdversas")
                         .HasColumnType("nvarchar(max)");
 
@@ -192,10 +185,6 @@ namespace Hospisim.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AtendimentoId");
-
-                    b.HasIndex("ProfissionalId");
-
-                    b.HasIndex("ProfissionalSaudeId");
 
                     b.ToTable("Prescricoes");
                 });
@@ -223,7 +212,7 @@ namespace Hospisim.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EspecialidadeId")
+                    b.Property<Guid?>("EspecialidadeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NomeCompleto")
@@ -323,7 +312,7 @@ namespace Hospisim.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -383,134 +372,75 @@ namespace Hospisim.Migrations
                     b.HasIndex("AtendimentoId")
                         .IsUnique();
 
-                    b.HasIndex("PacienteId");
-
                     b.ToTable("Internacoes");
                 });
 
             modelBuilder.Entity("HOSPISIM.Models.AltaHospitalar", b =>
                 {
-                    b.HasOne("Internacao", "Internacao")
+                    b.HasOne("Internacao", null)
                         .WithOne("AltaHospitalar")
                         .HasForeignKey("HOSPISIM.Models.AltaHospitalar", "InternacaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Internacao");
                 });
 
             modelBuilder.Entity("HOSPISIM.Models.Atendimento", b =>
                 {
-                    b.HasOne("Hospisim.Models.Entities.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HOSPISIM.Models.ProfissionalSaude", "Profissional")
-                        .WithMany()
-                        .HasForeignKey("ProfissionalId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HOSPISIM.Models.ProfissionalSaude", null)
                         .WithMany("Atendimentos")
                         .HasForeignKey("ProfissionalSaudeId");
 
-                    b.HasOne("Hospisim.Models.Entities.Prontuario", "Prontuario")
+                    b.HasOne("Hospisim.Models.Entities.Prontuario", null)
                         .WithMany("Atendimentos")
-                        .HasForeignKey("ProntuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Paciente");
-
-                    b.Navigation("Profissional");
-
-                    b.Navigation("Prontuario");
+                        .HasForeignKey("ProntuarioId");
                 });
 
             modelBuilder.Entity("HOSPISIM.Models.Exame", b =>
                 {
-                    b.HasOne("HOSPISIM.Models.Atendimento", "Atendimento")
+                    b.HasOne("HOSPISIM.Models.Atendimento", null)
                         .WithMany("Exames")
                         .HasForeignKey("AtendimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Atendimento");
                 });
 
             modelBuilder.Entity("HOSPISIM.Models.Prescricao", b =>
                 {
-                    b.HasOne("HOSPISIM.Models.Atendimento", "Atendimento")
+                    b.HasOne("HOSPISIM.Models.Atendimento", null)
                         .WithMany("Prescricoes")
                         .HasForeignKey("AtendimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HOSPISIM.Models.ProfissionalSaude", "Profissional")
-                        .WithMany()
-                        .HasForeignKey("ProfissionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HOSPISIM.Models.ProfissionalSaude", null)
-                        .WithMany("Prescricoes")
-                        .HasForeignKey("ProfissionalSaudeId");
-
-                    b.Navigation("Atendimento");
-
-                    b.Navigation("Profissional");
                 });
 
             modelBuilder.Entity("HOSPISIM.Models.ProfissionalSaude", b =>
                 {
-                    b.HasOne("HOSPISIM.Models.Especialidade", "Especialidade")
+                    b.HasOne("HOSPISIM.Models.Especialidade", null)
                         .WithMany("Profissionais")
-                        .HasForeignKey("EspecialidadeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Especialidade");
+                        .HasForeignKey("EspecialidadeId");
                 });
 
             modelBuilder.Entity("Hospisim.Models.Entities.Prontuario", b =>
                 {
-                    b.HasOne("Hospisim.Models.Entities.Paciente", "Paciente")
+                    b.HasOne("Hospisim.Models.Entities.Paciente", null)
                         .WithMany("Prontuarios")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Paciente");
+                        .HasForeignKey("PacienteId");
                 });
 
             modelBuilder.Entity("Internacao", b =>
                 {
-                    b.HasOne("HOSPISIM.Models.Atendimento", "Atendimento")
+                    b.HasOne("HOSPISIM.Models.Atendimento", null)
                         .WithOne("Internacao")
                         .HasForeignKey("Internacao", "AtendimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Hospisim.Models.Entities.Paciente", "Paciente")
-                        .WithMany("Internacoes")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Atendimento");
-
-                    b.Navigation("Paciente");
                 });
 
             modelBuilder.Entity("HOSPISIM.Models.Atendimento", b =>
                 {
                     b.Navigation("Exames");
 
-                    b.Navigation("Internacao")
-                        .IsRequired();
+                    b.Navigation("Internacao");
 
                     b.Navigation("Prescricoes");
                 });
@@ -523,14 +453,10 @@ namespace Hospisim.Migrations
             modelBuilder.Entity("HOSPISIM.Models.ProfissionalSaude", b =>
                 {
                     b.Navigation("Atendimentos");
-
-                    b.Navigation("Prescricoes");
                 });
 
             modelBuilder.Entity("Hospisim.Models.Entities.Paciente", b =>
                 {
-                    b.Navigation("Internacoes");
-
                     b.Navigation("Prontuarios");
                 });
 

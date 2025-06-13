@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HOSPISIM.Models
 {
@@ -10,7 +11,9 @@ namespace HOSPISIM.Models
         public DateTime? DataRealizacao { get; set; }
         public string Resultado { get; set; }
 
+        [ForeignKey("Atendimento")]
         public Guid AtendimentoId { get; set; }
-        public Atendimento Atendimento { get; set; }
+
+
     }
 }

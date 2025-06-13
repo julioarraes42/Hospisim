@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HOSPISIM.Models
 {
@@ -6,11 +7,12 @@ namespace HOSPISIM.Models
     {
         public Guid Id { get; set; }
 
+        [ForeignKey("Atendimento")]
         public Guid AtendimentoId { get; set; }
-        public Atendimento Atendimento { get; set; }
 
+        [ForeignKey("Profissional")]
         public Guid ProfissionalId { get; set; }
-        public ProfissionalSaude Profissional { get; set; }
+
 
         public string Medicamento { get; set; }
         public string Dosagem { get; set; }

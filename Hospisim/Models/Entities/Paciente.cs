@@ -19,7 +19,7 @@ namespace Hospisim.Models.Entities
         public bool PossuiPlanoSaude { get; set; }
 
         public ICollection<Prontuario>? Prontuarios { get; set; }
-        public ICollection<Internacao>? Internacoes { get; set; }
+
 
     }
 }

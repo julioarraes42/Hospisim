@@ -12,6 +12,6 @@ namespace HOSPISIM.Models
 
         [ForeignKey("Internacao")]
         public Guid InternacaoId { get; set; }
-        public Internacao Internacao { get; set; }
+
     }
 }

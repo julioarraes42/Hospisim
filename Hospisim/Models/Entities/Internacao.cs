@@ -1,16 +1,19 @@
 ﻿using Hospisim.Models.Entities;
 using HOSPISIM.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 public class Internacao
 {
     public Guid Id { get; set; }
 
-    public Guid PacienteId { get; set; }               
-    public Paciente Paciente { get; set; }             
+    [ForeignKey("Paciente")]
+    public Guid PacienteId { get; set; }
 
-    public Guid AtendimentoId { get; set; }            
-    public Atendimento Atendimento { get; set; }       
+
+    [ForeignKey("Atendimento")]
+    public Guid AtendimentoId { get; set; }               
+
 
     public DateTime DataEntrada { get; set; }
     public DateTime? PrevisaoAlta { get; set; }

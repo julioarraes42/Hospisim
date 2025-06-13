@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Hospisim.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Hospisim.Models.Entities;
+using Hospisim.Services;
 
 namespace Hospisim.Controllers
 {
@@ -14,95 +8,71 @@ namespace Hospisim.Controllers
     [ApiController]
     public class PacientesController : ControllerBase
     {
-        private readonly HospisimDbContext _context;
+        private readonly IPacienteService _pacienteService;
 
-        public PacientesController(HospisimDbContext context)
+        public PacientesController(IPacienteService pacienteService)
         {
-            _context = context;
+            _pacienteService = pacienteService;
         }
 
         // GET: api/Pacientes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Paciente>>> GetPacientes()
         {
-            return await _context.Pacientes.ToListAsync();
+            var pacientes = await _pacienteService.ObterTodosAsync();
+            return Ok(pacientes);
         }
 
         // GET: api/Pacientes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Paciente>> GetPaciente(Guid id)
         {
-            var paciente = await _context.Pacientes.FindAsync(id);
+            var paciente = await _pacienteService.ObterPorIdAsync(id);
+            if (paciente == null) return NotFound();
+            return Ok(paciente);
+        }
 
-            if (paciente == null)
+        // POST: api/Pacientes
+        [HttpPost]
+        public async Task<ActionResult<Paciente>> PostPaciente(Paciente paciente)
+        {
+            try
             {
-                return NotFound();
+                var novoPaciente = await _pacienteService.CriarAsync(paciente);
+                return CreatedAtAction(nameof(GetPaciente), new { id = novoPaciente.Id }, novoPaciente);
             }
-
-            return paciente;
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
 
         // PUT: api/Pacientes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPaciente(Guid id, Paciente paciente)
         {
             if (id != paciente.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(paciente).State = EntityState.Modified;
+                return BadRequest("O ID da URL não corresponde ao paciente informado.");
 
             try
             {
-                await _context.SaveChangesAsync();
+                var atualizado = await _pacienteService.AtualizarAsync(id, paciente);
+                if (atualizado == null) return NotFound();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!PacienteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(new { mensagem = ex.Message });
             }
-
-            return NoContent();
-        }
-
-        // POST: api/Pacientes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Paciente>> PostPaciente(Paciente paciente)
-        {
-            _context.Pacientes.Add(paciente);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPaciente", new { id = paciente.Id }, paciente);
         }
 
         // DELETE: api/Pacientes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePaciente(Guid id)
         {
-            var paciente = await _context.Pacientes.FindAsync(id);
-            if (paciente == null)
-            {
-                return NotFound();
-            }
-
-            _context.Pacientes.Remove(paciente);
-            await _context.SaveChangesAsync();
-
+            var sucesso = await _pacienteService.DeletarAsync(id);
+            if (!sucesso) return NotFound();
             return NoContent();
-        }
-
-        private bool PacienteExists(Guid id)
-        {
-            return _context.Pacientes.Any(e => e.Id == id);
         }
     }
 }

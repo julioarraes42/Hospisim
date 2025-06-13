@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hospisim.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class MigrationsDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,7 @@ namespace Hospisim.Migrations
                     Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegistroConselho = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoRegistro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EspecialidadeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EspecialidadeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DataAdmissao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CargaHorariaSemanal = table.Column<int>(type: "int", nullable: false),
                     Turno = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -69,8 +69,7 @@ namespace Hospisim.Migrations
                         name: "FK_ProfissionaisSaude_Especialidades_EspecialidadeId",
                         column: x => x.EspecialidadeId,
                         principalTable: "Especialidades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +80,7 @@ namespace Hospisim.Migrations
                     Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataAbertura = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ObservacoesGerais = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,8 +89,7 @@ namespace Hospisim.Migrations
                         name: "FK_Prontuarios_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -103,26 +101,14 @@ namespace Hospisim.Migrations
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Local = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProntuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProfissionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProntuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProfissionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ProfissionalSaudeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Atendimentos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Atendimentos_Pacientes_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Atendimentos_ProfissionaisSaude_ProfissionalId",
-                        column: x => x.ProfissionalId,
-                        principalTable: "ProfissionaisSaude",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Atendimentos_ProfissionaisSaude_ProfissionalSaudeId",
                         column: x => x.ProfissionalSaudeId,
@@ -132,8 +118,7 @@ namespace Hospisim.Migrations
                         name: "FK_Atendimentos_Prontuarios_ProntuarioId",
                         column: x => x.ProntuarioId,
                         principalTable: "Prontuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -184,12 +169,6 @@ namespace Hospisim.Migrations
                         principalTable: "Atendimentos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Internacoes_Pacientes_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,8 +186,7 @@ namespace Hospisim.Migrations
                     DataFim = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Observacoes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusPrescricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReacoesAdversas = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProfissionalSaudeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ReacoesAdversas = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,17 +197,6 @@ namespace Hospisim.Migrations
                         principalTable: "Atendimentos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prescricoes_ProfissionaisSaude_ProfissionalId",
-                        column: x => x.ProfissionalId,
-                        principalTable: "ProfissionaisSaude",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prescricoes_ProfissionaisSaude_ProfissionalSaudeId",
-                        column: x => x.ProfissionalSaudeId,
-                        principalTable: "ProfissionaisSaude",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -260,16 +227,6 @@ namespace Hospisim.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Atendimentos_PacienteId",
-                table: "Atendimentos",
-                column: "PacienteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Atendimentos_ProfissionalId",
-                table: "Atendimentos",
-                column: "ProfissionalId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Atendimentos_ProfissionalSaudeId",
                 table: "Atendimentos",
                 column: "ProfissionalSaudeId");
@@ -291,24 +248,9 @@ namespace Hospisim.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Internacoes_PacienteId",
-                table: "Internacoes",
-                column: "PacienteId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Prescricoes_AtendimentoId",
                 table: "Prescricoes",
                 column: "AtendimentoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescricoes_ProfissionalId",
-                table: "Prescricoes",
-                column: "ProfissionalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescricoes_ProfissionalSaudeId",
-                table: "Prescricoes",
-                column: "ProfissionalSaudeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProfissionaisSaude_EspecialidadeId",
